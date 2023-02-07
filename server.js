@@ -1,0 +1,45 @@
+import express from "express"; //Import Express
+import { Low } from "lowdb"; //Import the LowDB module. Uses a JSON file to create our "database"
+import { JSONFile } from "lowdb/node";
+import setupPokemonRouter from "./routes/pokemon.js";
+import morgan from "morgan";
+
+export default async function createServer() {
+  // Configure lowdb to write to JSONFile. This will be our "database"
+  const adapter = new JSONFile("db.json");
+  const db = new Low(adapter);
+
+  //Reads the database
+  await db.read();
+
+  //Checks if there is any data in the database. If not, we give default data.
+  db.data = db.data || { pokemon: [] };
+
+  //This writes to the database if there are any changes
+  await db.write();
+
+  //Instantiate our express application
+  const app = express();
+
+  //Use Builtin middleware to extract JSON data from the body of any request made to the server
+  app.use(express.json());
+
+  app.use(morgan("tiny"));
+  morgan.token("host", function (request, response) {
+    return request.hostname;
+  });
+
+  app.use("/pokemon", function (request, response, next) {
+    if (request.query.admin === "true") {
+      next();
+    } else {
+      response.status(401).send("Unauthorized");
+    }
+  });
+
+  //   "/" => "/"
+  // "/:todo" => "/todo/:todo"
+  app.use("/pokemon", setupPokemonRouter(db));
+
+  return app;
+};
