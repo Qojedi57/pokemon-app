@@ -47,7 +47,7 @@ export default function setupPokemonRouter(db) {
     console.log(pokemon);
 
     const pokemonIndex = db.data.pokemon.findIndex(
-      (currentpokemon) => currentpokemon.id === pokemon
+      (currentpokemon) => currentpokemon.name === pokemon
     );
 
     db.data.pokemon[pokemonIndex].name = request.body.name;
@@ -64,7 +64,7 @@ export default function setupPokemonRouter(db) {
     console.log(pokemon);
 
     const pokemonIndex = db.data.pokemon.findIndex(
-      (currentpokemon) => currentpokemon.id === pokemon
+      (currentpokemon) => currentpokemon.name === pokemon
     );
     db.data.pokemon.splice(pokemonIndex, 1);
     db.write();
