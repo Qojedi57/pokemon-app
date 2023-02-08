@@ -1,10 +1,16 @@
 {
   "pokemon": [
     {
-      "Name": "pikachu"
+      "name": "pikachu"
     },
     {
-      "Name": "charzard"
+      "name": "charzard"
+    },
+    {
+      "name": "squirtel"
+    },
+    {
+      "name": "mewtwo"
     }
   ]
 }
